@@ -5,6 +5,13 @@ class Character():
         self.playerMovement = playerMovement
         self.hitbox = hitbox
         self.speed = speed
+        self.action = 'idle'
+        self.frame = 0
+
+    def ChangeAction(self, newAction):
+        if self.action != newAction:
+            self.action = newAction
+            self.frame = 0
 
     def Move(self, up, down, left, right, collidables, rect):
         import main
@@ -28,3 +35,6 @@ class Character():
         for tile in collided:
             if self.playerMovement[1] > 0: rect.bottom = tile.top
             elif self.playerMovement[1] < 0: rect.top = tile.bottom
+
+        if self.playerMovement[0] == 0 and self.playerMovement[1] == 0: self.ChangeAction('idle')
+        else: self.ChangeAction('walk')

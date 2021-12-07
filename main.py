@@ -14,9 +14,8 @@ display = pygame.Surface((displaySize))
 clock = pygame.time.Clock()
 
 #Sprites
-backgroundSprite = pygame.image.load('Assets/background.png').convert()
-charSprite = pygame.image.load('Assets/Character.png').convert()
-gunSprite = pygame.image.load('Assets/pistol.png').convert()
+backgroundSprite = pygame.image.load('Assets/background.png')
+gunSprite = pygame.image.load('Assets/pistol.png')
 
 up, down, left, right = False, False, False, False
 playerPos = [0, 0]
@@ -46,6 +45,26 @@ def CameraMovement():
     intCamOffset[0] = int(camOffset[0])
     intCamOffset[1] = int(camOffset[1])
     return intCamOffset, camOffset
+
+animationFrames = {}
+def LoadAnimations(path, timeBetweenFrames):
+    global animationFrames
+    name = path.split('/')[-1]
+    animFrameData = []
+    idIndex = 0
+    for frame in timeBetweenFrames:
+        animFrameId = f"{name}_{idIndex}"
+        location = f"{path}/{animFrameId}.png"
+        sprite = pygame.image.load(location)
+        animationFrames[animFrameId] = sprite.copy()
+
+        for i in range(frame): animFrameData.append(animFrameId)
+        idIndex += 1
+    return animFrameData
+
+characterAnims = {}
+characterAnims['walk'] = LoadAnimations('Assets/Animations/Character/Walk', [4, 4, 4, 4])
+characterAnims['idle'] = LoadAnimations('Assets/Animations/Character/Idle', [45, 45])
 
 def LoadTiles():
     tiles = []
@@ -120,6 +139,11 @@ while True:
 
     gunTargetPos = [char.hitbox.x, char.hitbox.y]
     char.Move(up, down, left, right, collidables, char.hitbox)
+
+    char.frame += 1
+    if char.frame >= len(characterAnims[char.action]): char.frame = 0
+    charSprite = animationFrames[characterAnims[char.action][char.frame]]
+    print(characterAnims[char.action][char.frame])
     display.blit(charSprite, (char.hitbox.x - camOffset[0], char.hitbox.y - camOffset[1]))
     gunAngle = pistol.Rotation(camOffset, gunTargetPos)
     
