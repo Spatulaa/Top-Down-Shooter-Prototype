@@ -36,5 +36,6 @@ class Character():
             if self.playerMovement[1] > 0: rect.bottom = tile.top
             elif self.playerMovement[1] < 0: rect.top = tile.bottom
 
+        #If moving, idle anim, else, walk
         if self.playerMovement[0] == 0 and self.playerMovement[1] == 0: self.ChangeAction('idle')
         else: self.ChangeAction('walk')

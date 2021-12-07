@@ -52,7 +52,9 @@ def LoadAnimations(path, timeBetweenFrames):
     name = path.split('/')[-1]
     animFrameData = []
     idIndex = 0
+    
     for frame in timeBetweenFrames:
+        #Finding Sprite
         animFrameId = f"{name}_{idIndex}"
         location = f"{path}/{animFrameId}.png"
         sprite = pygame.image.load(location)
@@ -63,6 +65,7 @@ def LoadAnimations(path, timeBetweenFrames):
     return animFrameData
 
 characterAnims = {}
+#Creating Frames Id Names
 characterAnims['walk'] = LoadAnimations('Assets/Animations/Character/Walk', [4, 4, 4, 4])
 characterAnims['idle'] = LoadAnimations('Assets/Animations/Character/Idle', [45, 45])
 
