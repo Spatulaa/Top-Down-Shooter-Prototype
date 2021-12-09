@@ -9,6 +9,7 @@ winSize = [1920, 1080]
 displaySize = [480, 270]
 win = pygame.display.set_caption("Donut Survive")
 win = pygame.display.set_mode(winSize, 0, 32)
+cursorDisplay = pygame.Surface((winSize), pygame.SRCALPHA)
 display = pygame.Surface((displaySize))
 
 clock = pygame.time.Clock()
@@ -16,6 +17,7 @@ clock = pygame.time.Clock()
 #Sprites
 backgroundSprite = pygame.image.load('Assets/background.png')
 gunSprite = pygame.image.load('Assets/pistol.png')
+cursor = pygame.image.load('Assets/Crosshair.png')
 
 up, down, left, right = False, False, False, False
 playerPos = [0, 0]
@@ -146,14 +148,20 @@ while True:
     char.frame += 1
     if char.frame >= len(characterAnims[char.action]): char.frame = 0
     charSprite = animationFrames[characterAnims[char.action][char.frame]]
-    print(characterAnims[char.action][char.frame])
     display.blit(charSprite, (char.hitbox.x - camOffset[0], char.hitbox.y - camOffset[1]))
     gunAngle = pistol.Rotation(camOffset, gunTargetPos)
     
     if bullets != None: 
-        bullets.draw(display)
         bullets.update(1.5, cameraOffset, collidables)
+        bullets.draw(display)
+
+    #Cursor
+    cursorDisplay.fill(pygame.SRCALPHA)
+    #pygame.mouse.set_visible(False)
+    sizedCursor = pygame.transform.scale(cursor, (50, 50))
+    cursorDisplay.blit(sizedCursor, (pygame.mouse.get_pos()[0] - sizedCursor.get_width()/2, pygame.mouse.get_pos()[1] - sizedCursor.get_height()/2))
 
     win.blit(pygame.transform.scale(display, winSize), (0, 0))
+    win.blit(cursorDisplay, (0, 0))
     pygame.display.update()
     clock.tick(75)

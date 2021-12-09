@@ -13,13 +13,14 @@ class Gun():
 
     def Rotation(self, camOffset, playerPos):
         #Rotating Gun
-        targetedPos = [pygame.mouse.get_pos()[0]/4 - 240, pygame.mouse.get_pos()[1]/4 - 135]
+        targetedPos = [pygame.mouse.get_pos()[0]/4 - 240 + 12.5/4, pygame.mouse.get_pos()[1]/4 - 135 + 12.5/4]
         gunAngle = math.degrees(math.atan2(targetedPos[0], targetedPos[1])) - 90
 
         #Moving Gun
         gunDirAngle = math.atan2(targetedPos[0], targetedPos[1])
         gunDir = [math.sin(gunDirAngle), math.cos(gunDirAngle)]
 
+        global gunCopy
         gunCopy = self.gunSprite.copy()
         if targetedPos[0] + 240 < 240: gunCopy = pygame.transform.flip(gunCopy, False, True) 
         else: gunCopy = pygame.transform.flip(gunCopy, False, False)
@@ -36,11 +37,11 @@ class Gun():
         global bullets
 
         #Finding Direction
-        targetedPos = [pygame.mouse.get_pos()[0]/4, pygame.mouse.get_pos()[1]/4]
-        gunAngle = math.atan2(targetedPos[0] - self.gunX, targetedPos[1] - self.gunY)
+        targetedPos = [pygame.mouse.get_pos()[0]/4 - 240 + 12.5/4, pygame.mouse.get_pos()[1]/4 - 135 + 12.5/4]
+        gunAngle = math.atan2(targetedPos[0], targetedPos[1])
         shootDir = [math.sin(gunAngle), math.cos(gunAngle)]
 
-        startPos = [self.gunX + cameraOffset[0], self.gunY + cameraOffset[1]]
+        startPos = [gunCopy.get_width() * shootDir[0] + self.gunX + cameraOffset[0], gunCopy.get_height() * shootDir[1] + self.gunY + cameraOffset[1]]
         #Spawning Bullet
         if pygame.time.get_ticks() - self.lastShot >= self.fireRate * 100:
             bullets.add(bullet.Bullet(startPos, shootDir, 6, False))
