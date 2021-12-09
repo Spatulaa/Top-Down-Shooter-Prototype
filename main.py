@@ -157,7 +157,7 @@ while True:
 
     #Cursor
     cursorDisplay.fill(pygame.SRCALPHA)
-    #pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(False)
     sizedCursor = pygame.transform.scale(cursor, (50, 50))
     cursorDisplay.blit(sizedCursor, (pygame.mouse.get_pos()[0] - sizedCursor.get_width()/2, pygame.mouse.get_pos()[1] - sizedCursor.get_height()/2))
 
