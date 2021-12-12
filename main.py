@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys, os, random
 
 from pygame.constants import *
 import character, gun
@@ -47,6 +47,13 @@ def CameraMovement():
     intCamOffset[0] = int(camOffset[0])
     intCamOffset[1] = int(camOffset[1])
     return intCamOffset, camOffset
+
+particles = []
+def CreateParticles(burst, pos, vel, timeRange, spawnRate):
+    if burst:
+        for i in range(0, spawnRate):
+            #pos, vel, timer
+            particles.append([pos.copy(), [random.randint(0, vel[0] * 10) / 10 - vel[0]/2, random.randint(0, vel[1] * 10) / 10 - vel[1]/2], random.randint(timeRange[0], timeRange[1])])
 
 animationFrames = {}
 def LoadAnimations(path, timeBetweenFrames):
@@ -141,6 +148,7 @@ while True:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             bullets = pistol.Shoot(cameraOffset)
+            CreateParticles(True, [0, 0], [5, 5], [4, 6], 10)
 
     gunTargetPos = [char.hitbox.x, char.hitbox.y]
     char.Move(up, down, left, right, collidables, char.hitbox)
@@ -154,6 +162,17 @@ while True:
     if bullets != None: 
         bullets.update(1.5, cameraOffset, collidables)
         bullets.draw(display)
+
+    #Particles
+    if particles != []:
+        for particle in particles:
+            particle[0][0] += particle[1][0]
+            particle[0][1] += particle[1][1]
+            particle[2] -= 0.1
+
+            pygame.draw.circle(display, [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)], [particle[0][0] - camOffset[0], particle[0][1] - camOffset[1]], particle[2])
+            if particle[2] <= 0: particles.remove(particle)
+        
 
     #Cursor
     cursorDisplay.fill(pygame.SRCALPHA)
