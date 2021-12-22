@@ -44,6 +44,8 @@ class Gun():
         startPos = [gunCopy.get_width() * shootDir[0] + self.gunX + cameraOffset[0], gunCopy.get_height() * shootDir[1] + self.gunY + cameraOffset[1]]
         #Spawning Bullet
         if pygame.time.get_ticks() - self.lastShot >= self.fireRate * 100:
+            import main
+            main.CreateParticles(True, startPos, [6, 8], [2, 3], 10, [[255, 50, 0], [255, 255, 0]])
             bullets.add(bullet.Bullet(startPos, shootDir, 6, False))
             self.lastShot = pygame.time.get_ticks()
         

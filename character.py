@@ -29,12 +29,14 @@ class Character():
         for tile in collided:
             if self.playerMovement[0] > 0: rect.right = tile.left
             elif self.playerMovement[0] < 0: rect.left = tile.right
+            self.playerMovement[0] = 0
 
         rect.y += self.playerMovement[1]
         collided = main.CollisionTest(self.hitbox, collidables)
         for tile in collided:
             if self.playerMovement[1] > 0: rect.bottom = tile.top
             elif self.playerMovement[1] < 0: rect.top = tile.bottom
+            self.playerMovement[1] = 0
 
         #If moving, idle anim, else, walk
         if self.playerMovement[0] == 0 and self.playerMovement[1] == 0: self.ChangeAction('idle')
