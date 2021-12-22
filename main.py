@@ -159,16 +159,6 @@ while True:
     gunTargetPos = [char.hitbox.x, char.hitbox.y]
     char.Move(up, down, left, right, collidables, char.hitbox)
 
-    char.frame += 1
-    if char.frame >= len(characterAnims[char.action]): char.frame = 0
-    charSprite = animationFrames[characterAnims[char.action][char.frame]]
-    display.blit(charSprite, (char.hitbox.x - camOffset[0], char.hitbox.y - camOffset[1]))
-    gunAngle = pistol.Rotation(camOffset, gunTargetPos)
-    
-    if bullets != None: 
-        bullets.update(1.5, cameraOffset, collidables)
-        bullets.draw(display)
-
     #Particles
     if particles != []:
         for particle in particles:
@@ -179,7 +169,17 @@ while True:
             pygame.draw.circle(display, particle[3], [particle[0][0] - camOffset[0], particle[0][1] - camOffset[1]], particle[2])
             if particle[2] <= 0: particles.remove(particle)
     if char.playerMovement[0] != 0 or char.playerMovement[1] != 0: CreateParticles(False, [char.hitbox.x + 12, char.hitbox.y + 20], [3, 1], [2, 4], 0, [[200, 200, 200], [255, 255, 255]])
-        
+
+    #Char Anims
+    char.frame += 1
+    if char.frame >= len(characterAnims[char.action]): char.frame = 0
+    charSprite = animationFrames[characterAnims[char.action][char.frame]]
+    display.blit(charSprite, (char.hitbox.x - camOffset[0], char.hitbox.y - camOffset[1]))
+    gunAngle = pistol.Rotation(camOffset, gunTargetPos)
+    
+    if bullets != None: 
+        bullets.update(1.5, cameraOffset, collidables)
+        bullets.draw(display)        
 
     #Cursor
     cursorDisplay.fill(pygame.SRCALPHA)
