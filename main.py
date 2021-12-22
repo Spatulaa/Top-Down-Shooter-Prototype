@@ -1,4 +1,5 @@
 import pygame, sys, os, random
+from pygame import color
 
 from pygame.constants import *
 import character, gun
@@ -49,11 +50,17 @@ def CameraMovement():
     return intCamOffset, camOffset
 
 particles = []
-def CreateParticles(burst, pos, vel, timeRange, spawnRate):
+def CreateParticles(burst, pos, vel, timeRange, spawnRate, colorRange):
+    def CreateParticle():
+        particleColor = [0, 0, 0]
+        for x in range(0, 3): particleColor[x] = random.randint(colorRange[0][x], colorRange[1][x])
+        particles.append([pos.copy(), [random.randint(0, vel[0] * 10) / 10 - vel[0]/2, random.randint(0, vel[1] * 10) / 10 - vel[1]/2], random.randint(timeRange[0], timeRange[1]), particleColor]) #pos, vel, timer, color
+
     if burst:
-        for i in range(0, spawnRate):
-            #pos, vel, timer
-            particles.append([pos.copy(), [random.randint(0, vel[0] * 10) / 10 - vel[0]/2, random.randint(0, vel[1] * 10) / 10 - vel[1]/2], random.randint(timeRange[0], timeRange[1])])
+        for i in range(0, spawnRate): CreateParticle()
+        return
+    #Continuous Particles
+    CreateParticle()
 
 animationFrames = {}
 def LoadAnimations(path, timeBetweenFrames):
@@ -148,7 +155,6 @@ while True:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             bullets = pistol.Shoot(cameraOffset)
-            CreateParticles(True, [0, 0], [5, 5], [4, 6], 10)
 
     gunTargetPos = [char.hitbox.x, char.hitbox.y]
     char.Move(up, down, left, right, collidables, char.hitbox)
@@ -170,8 +176,9 @@ while True:
             particle[0][1] += particle[1][1]
             particle[2] -= 0.1
 
-            pygame.draw.circle(display, [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)], [particle[0][0] - camOffset[0], particle[0][1] - camOffset[1]], particle[2])
+            pygame.draw.circle(display, particle[3], [particle[0][0] - camOffset[0], particle[0][1] - camOffset[1]], particle[2])
             if particle[2] <= 0: particles.remove(particle)
+    if char.playerMovement[0] != 0 or char.playerMovement[1] != 0: CreateParticles(False, [char.hitbox.x + 12, char.hitbox.y + 20], [3, 1], [2, 4], 0, [[200, 200, 200], [255, 255, 255]])
         
 
     #Cursor
