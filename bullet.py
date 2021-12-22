@@ -28,6 +28,7 @@ class Bullet(pygame.sprite.Sprite):
         import main
         collidedList = main.CollisionTest(pygame.Rect(self.startPos[0], self.startPos[1], 2.5, 2.5), tiles)
         if collidedList != []: 
+            main.CreateParticles(True, self.startPos, [4, 4], [1, 3], 3, [[0, 0, 255], [0, 0, 255]])
             self.kill()
 
         self.rect = self.image.get_rect(center = (self.startPos[0] - cameraOffset[0], self.startPos[1] - cameraOffset[1]))
